@@ -31,38 +31,18 @@
       
         <div class="animated fadeInLeft" style="animation-delay: 0.4s">
           <p class="my-4 text-gray-600 font-light hidden lg:block">
-            鲲鹏展翅自兹始
+            文章目录
           </p>
-          <div class="animated fadeInLeft social-container hidden lg:block" style="animation-delay: 0.6s">
-            
-              
-            
-              
-            
-              
-            
-              
-                <a href="https://www.zhihu.com/people/feng-du-64-67/activities" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="remixicon-zhihu-line"></i>
-                </a>
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-            
-              
-                <a href="http://wpa.qq.com/msgrd?v=3&amp;uin=97101714&amp;site=qq&amp;menu=yes" target="_blank" class="mr-4 text-xl text-gray-400 font-light hover:text-gray-900">
-                  <i class="remixicon-qq-line"></i>
-                </a>
-              
-            
+          <div class="toc-container hidden lg:block">
+            <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%A0%91%E7%9A%84%E5%8F%8C%E4%BA%B2%E8%A1%A8%E7%A4%BA%E6%B3%95">树的双亲表示法</a></li>
+<li><a href="#%E6%A0%91%E7%9A%84%E5%AD%A9%E5%AD%90%E8%A1%A8%E7%A4%BA%E6%B3%95">树的孩子表示法</a></li>
+</ul>
+</li>
+</ul>
+
           </div>
         </div>
       
@@ -106,33 +86,143 @@
 </div>
 <div class="mask" onclick="closeMenu()">
 </div>
-      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4">
-        <h2 class="text-lg text-gray-700 mb-8">
-          <i class="remixicon-bookmark-line"></i> IT
-        </h2>
-        
-  <section class="post-item md:flex pb-12 animated fadeIn" :style="{ 'animation-delay': `${0 * 0.2}s` }">
-    
-      <a href="https://www.mksdu.top//post/hello-world" class="feature-image-wrapper bg-gray-100 rounded-lg flex-shrink-0 mr-8 w-full h-56 h-32 md:w-56 md:h-40">
-        <div class="post-feature-image lazy w-full h-56 h-32 md:w-56 md:h-40" data-bg="'https://www.mksdu.top//post-images/hello-world.jpg'">
+      <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
+        <h1 class="text-3xl font-bold lg:mt-16">树的两种表示方法</h1>
+        <div class="text-sm text-gray-700 lg:my-8">
+          2019-11-19 / 4 min read
         </div>
-      </a>
-    
-    <div class="content">
-      <a href="https://www.mksdu.top//post/hello-world">
-        <h2 class="post-title text-xl font-extrabold mt-5 md:mt-0">Hello World!</h2>
-      </a>
-      <div class="post-abstract text-gray-700 font-light my-4">
         
-      </div>
-      <div class="text-gray-400 text-sm font-light">2019-11-16 / 1 min read</div>
-    </div>
-  </section>
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://www.mksdu.top//post-images/shu-de-liang-chong-biao-shi-fang-fa.jpg" alt="">
+        
+        <div class="post-content yue">
+          <h2 id="树的双亲表示法">树的双亲表示法</h2>
+<p>由于树中的每个结点都有唯一的一个双亲结点，所以可用一组连续的存储空间（一维数组）存储树中的各个结点，数组中的一个元素表示树中的一个结点，每个结点含两个域，数据域存放结点本身信息，双亲域指示本结点的双亲结点在数组中位置。</p>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+using namespace std;
 
-        <div class="pagination-container animated fadeIn">
-  
-  
-</div>
+#define MAX_TREE_SIZE 100
+
+typedef struct PTNode{
+    char data;
+    int parent;
+}PTNode;
+
+typedef struct{
+    PTNode nodes[MAX_TREE_SIZE];
+    int r, n;
+}PTree;
+
+int main(){
+    PTree T;
+    printf(&quot;请输入树根的位置\n&quot;);
+    scanf(&quot;%d&quot;,&amp;T.r);
+    printf(&quot;请输入节点的个数\n&quot;);
+    scanf(&quot;%d&quot;,&amp;T.n);
+    printf(&quot;请输入每个节点及其双亲的位置\n&quot;);
+    for(int i = 0;i &lt; T.n;i++){
+        cin &gt;&gt; T.nodes[i].data &gt;&gt; T.nodes[i].parent;
+    }
+    printf(&quot;输入结束\n&quot;);
+    for(int i = 0;i &lt; T.n;i++){
+        for(int j = 0;j &lt; T.n;j++){
+            if(T.nodes[j].parent == i)
+                printf(&quot;%c是%c的孩子\n&quot;,T.nodes[j].data,T.nodes[i].data);
+        }
+    }
+    return 0;
+}
+</code></pre>
+<h2 id="树的孩子表示法">树的孩子表示法</h2>
+<p>孩子表示法存储普通树采用的是 &quot;<a href="http://data.biancheng.net/view/158.html">顺序表</a>+<a href="http://data.biancheng.net/view/160.html">链表</a>&quot; 的组合结构，其存储过程是：从树的根节点开始，使用顺序表依次存储树中各个节点，需要注意的是，与双亲表示法不同，孩子表示法会给各个节点配备一个链表，用于存储各节点的孩子节点位于顺序表中的位置。</p>
+<pre><code class="language-c++">#include &lt;bits/stdc++.h&gt;
+
+using namespace std;
+
+#define MAX_TREE_SIZE 100
+
+typedef struct CTNode{
+    int child;
+    struct CTNode *next;
+}*Childptr;
+typedef struct{
+    char data;
+    Childptr firstchild;
+}CTBox;
+typedef struct{
+    CTBox nodes[MAX_TREE_SIZE];
+    int n, r;
+}CTree;
+
+void initTree(CTree &amp;T){
+    printf(&quot;请输入树根的位置\n&quot;);
+    scanf(&quot;%d&quot;,&amp;T.r);
+    printf(&quot;请输入节点的个数\n&quot;);
+    scanf(&quot;%d&quot;,&amp;T.n);
+    for(int i = 0;i &lt; T.n;i++){
+        printf(&quot;请输入节点的元素\n&quot;);
+        cin &gt;&gt; T.nodes[i].data;
+        T.nodes[i].firstchild = (Childptr)malloc(sizeof(struct CTNode));
+        T.nodes[i].firstchild -&gt;next = NULL;
+        printf(&quot;输入%c节点的孩子数量\n&quot;,T.nodes[i].data);
+        int num;
+        scanf(&quot;%d&quot;,&amp;num);
+        if(num != 0){
+            Childptr p = T.nodes[i].firstchild;
+            for(int j = 0;j &lt; num;j++){
+                Childptr q = (Childptr)malloc(sizeof(struct CTNode));
+                q -&gt;next = NULL;
+                printf(&quot;请输入第%d个节点的位置\n&quot;,j + 1);
+                scanf(&quot;%d&quot;,&amp;q -&gt;child);
+                p -&gt;next = q;
+                p = p -&gt;next;
+            }
+        }
+    }
+}
+
+int main(){
+    CTree T;
+    initTree(T);
+    for(int i = 0;i &lt; T.n;i++){
+        if(T.nodes[i].firstchild -&gt;next != NULL){
+            Childptr p = T.nodes[i].firstchild;
+            while(p -&gt;next != NULL){
+                printf(&quot;%c是%c的双亲\n&quot;,T.nodes[i].data,T.nodes[p -&gt;next -&gt;child].data);
+                p = p -&gt;next;
+            }
+        }
+    }
+    return 0;
+}
+
+</code></pre>
+
+        </div>
+
+        
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://www.mksdu.top//tag/_sJHp_z1F">
+            <span class="flex-auto">数据结构</span>
+          </a>
+        
+
+
+        <div class="flex justify-between py-8">
+          
+
+          
+            <div class="next-post">
+              <a href="https://www.mksdu.top//post/guan-lesslesshai-shang-gang-qin-shi-greatergreater-you-gan">
+                <h3 class="post-title">
+                  观《海上钢琴师》有感
+                  <i class="remixicon-arrow-right-line"></i>
+                </h3>
+              </a>
+            </div>
+          
+        </div>
+
+        
 
       </div>
     </div>
