@@ -79,68 +79,208 @@
 <div class="mask" onclick="closeMenu()">
 </div>
       <div class="content-wrapper py-32 lg:p-8 lg:w-3/4 post-detail animated fadeIn">
-        <h1 class="text-3xl font-bold lg:mt-16">观《海上钢琴师》有感</h1>
+        <h1 class="text-3xl font-bold lg:mt-16">数据结构之最短路径（Dijkstra)</h1>
         <div class="text-sm text-gray-700 lg:my-8">
-          2019-11-16 / 1 min read
+          2019-12-02 / 6 min read
         </div>
         
-          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://www.mksdu.top//post-images/guan-lesslesshai-shang-gang-qin-shi-greatergreater-you-gan.jpg" alt="">
+          <img class="post-feature-image rounded-lg mx-auto my-4" src="https://www.mksdu.top//post-images/shu-ju-jie-gou-zhi-zui-duan-lu-jing-dijkstra.jpg" alt="">
         
         <div class="post-content yue">
-          <p><em>1900，开始时生命就被绑定在航线上</em></p>
-<p><em>他</em></p>
-<p><em>习惯了一个人看海</em><br>
-<em>习惯了一个人独奏</em></p>
-<p><em>喜欢用音乐去表达人的一举一动</em><br>
-<em>喜欢用琴键去世界旅行</em></p>
-<p><em>每次航行</em><br>
-<em>许多人在他的音符上跳跃欢呼</em><br>
-<em>可当有人喊出第一句'America'的时候</em><br>
-<em>他们又全部去甲板上呐喊</em><br>
-<em>只剩他自己孤独地呆坐在椅子上抚摸钢琴</em></p>
-<p><em>他也终究是一个凡人</em><br>
-<em>遇到一见钟情的女孩会即兴出最动听的音乐</em><br>
-<em>却难以在分别是表达出自己的内心</em><br>
-<em>唯有一句'Lucky'可以说出口</em></p>
-<p><em>一条舷梯</em><br>
-<em>连接着海上和陆地</em><br>
-<em>对他来说</em><br>
-<em>却是两个完全不同的世界</em></p>
-<p><em>他执着地坚持着自己的精神家园</em><br>
-<em>始终和音乐为伴</em><br>
-<em>为此</em><br>
-<em>他可以放弃自己的挚爱</em><br>
-<em>甚至可以放弃自己的生命</em></p>
-<p><em>当船爆炸的时候</em><br>
-<em>他带着音乐去了天国</em><br>
-<em>开始了自己的另一段不一样的故事</em></p>
+          <p>#include &lt;bits/stdc++.h&gt;</p>
+<p>using namespace std;</p>
+<p>#define N 100<br>
+#define INITFITE 32767</p>
+<p>typedef struct node{<br>
+int vernum, arcnum;<br>
+char data[N];<br>
+int martrix[N][N];<br>
+}Graph;</p>
+<p>struct nnode{<br>
+int pree;<br>
+int lowcost;<br>
+}Closedge[N];</p>
+<p>int locate(Graph G,char ch){<br>
+for(int i = 0;i &lt; N;i++){<br>
+if(G.data[i] == ch)<br>
+return i;<br>
+}<br>
+return 0;<br>
+}</p>
+<p>void Create_Graph(Graph &amp;G){<br>
+char v1, v2;<br>
+int weight;<br>
+cout &lt;&lt; &quot;请输入节点数&quot; &lt;&lt; endl;<br>
+cin &gt;&gt; G.vernum &gt;&gt; G.arcnum;<br>
+cout &lt;&lt; &quot;请输入每个节点&quot; &lt;&lt; endl;<br>
+for(int i = 0;i &lt; G.vernum;i++)<br>
+cin &gt;&gt; G.data[i];<br>
+for(int i = 0;i &lt; G.vernum;i++)<br>
+for(int j = 0;j &lt; G.vernum;j++)<br>
+G.martrix[i][j] = INITFITE;<br>
+cout &lt;&lt; &quot;请输入每条边的端点及权值&quot; &lt;&lt;endl;<br>
+for(int k = 0;k &lt; G.arcnum;k++){<br>
+cin &gt;&gt; v1 &gt;&gt; v2 &gt;&gt; weight;<br>
+int i = locate(G, v1);<br>
+int j = locate(G,v2);<br>
+G.martrix[i][j] = weight;<br>
+}<br>
+}</p>
+<p>bool visit[N];<br>
+void Dij(Graph G, char ch){<br>
+for(int i = 0;i &lt; N;i++)<br>
+visit[i] = false;<br>
+int v = locate(G,ch);<br>
+int w;<br>
+visit[v] = true;<br>
+Closedge[v].pree = -1;<br>
+int min = 1000000;<br>
+for(int i = 0;i &lt; G.vernum;i++){<br>
+Closedge[i].lowcost = G.martrix[v][i];<br>
+if(!visit[i]){<br>
+if(Closedge[i].lowcost &lt; INITFITE)<br>
+Closedge[i].pree = v;<br>
+else<br>
+Closedge[i].pree = -1;<br>
+if(Closedge[i].lowcost &lt; min){<br>
+w = i;<br>
+min = Closedge[i].lowcost;<br>
+}<br>
+}<br>
+}<br>
+Closedge[w].pree = v;<br>
+for(int j = 0;j &lt; G.vernum - 1;j++){<br>
+v = w;<br>
+visit[v] = true;<br>
+min = 1000000;<br>
+for(int i = 0;i &lt; G.vernum;i++){<br>
+if(!visit[i]){<br>
+if(Closedge[v].lowcost + G.martrix[v][i] &lt; Closedge[i].lowcost){<br>
+Closedge[i].lowcost = Closedge[v].lowcost + G.martrix[v][i];<br>
+Closedge[i].pree = v;<br>
+}<br>
+if(Closedge[i].lowcost &lt; min){<br>
+w = i;<br>
+min = Closedge[i].lowcost;<br>
+}<br>
+}<br>
+}<br>
+}<br>
+}</p>
+<p>void Short_Path(Graph G, char a, char b){<br>
+int v1 = locate(G,a);<br>
+int v2 = locate(G,b);<br>
+char ans[N];<br>
+int cnt = v2;<br>
+memset(ans,0,sizeof(ans));<br>
+if(Closedge[v2].pree == -1 &amp;&amp; v2 == v1){<br>
+cout &lt;&lt; a &lt;&lt; &quot;---&gt;&quot; &lt;&lt; b &lt;&lt; &quot;:&quot;;<br>
+cout &lt;&lt; &quot;This is origin &quot; &lt;&lt; &quot;最短距离：&quot; &lt;&lt; &quot;0&quot; &lt;&lt; endl;<br>
+}<br>
+else if(Closedge[v2].pree == -1 &amp;&amp; v2 != v1){<br>
+cout &lt;&lt; a &lt;&lt; &quot;---&gt;&quot; &lt;&lt; b &lt;&lt; &quot;:&quot;;<br>
+cout &lt;&lt; &quot;There is no Path&quot; &lt;&lt; endl;<br>
+}<br>
+else{<br>
+int k = 0;<br>
+ans[k] = b;<br>
+while(Closedge[v2].pree != v1){<br>
+ans[++k] = G.data[Closedge[v2].pree];<br>
+v2 = Closedge[v2].pree;<br>
+}<br>
+ans[++k] = a;<br>
+cout &lt;&lt; a &lt;&lt; &quot;---&gt;&quot; &lt;&lt; b &lt;&lt; &quot;:&quot;;<br>
+for(int i = k;i &gt;= 0;i--)<br>
+cout &lt;&lt; ans[i] &lt;&lt; &quot; &quot;;<br>
+cout &lt;&lt; &quot;最短距离：&quot; &lt;&lt; Closedge[cnt].lowcost &lt;&lt; endl;<br>
+}</p>
+<p>}</p>
+<p>int main(){<br>
+Graph G;<br>
+Create_Graph(G);<br>
+char c = 'x';<br>
+for(int i = 0;i &lt; G.vernum;i++){<br>
+for(int j = 0;j &lt; G.vernum;j++){<br>
+if(G.martrix[i][j] == INITFITE)<br>
+printf(&quot;%c\t&quot;,c);<br>
+else<br>
+printf(&quot;%d\t&quot;,G.martrix[i][j]);<br>
+}<br>
+printf(&quot;\n&quot;);<br>
+}<br>
+for(int i = 0;i &lt; 5;i++){<br>
+bool flag1 = false, flag2 = false;<br>
+cout &lt;&lt; &quot;请输入要查询的两点：&quot; &lt;&lt; endl;<br>
+char a, b;<br>
+cin &gt;&gt; a &gt;&gt; b;<br>
+for(int j = 0;j &lt; G.vernum;j++)<br>
+{<br>
+if(G.data[j] == a)<br>
+flag1 = true;<br>
+if(G.data[j] == b)<br>
+flag2 = true;<br>
+}<br>
+if(flag1 &amp;&amp; flag2)<br>
+{<br>
+Dij(G,a);<br>
+Short_Path(G,a,b);<br>
+}<br>
+else{<br>
+cout &lt;&lt; &quot;输入地点不存在&quot; &lt;&lt; endl;<br>
+continue;<br>
+}<br>
+}<br>
+return 0;<br>
+}</p>
+<p>//void Show(Graph G, char ch){<br>
+//    int v = locate(G,ch);<br>
+//    char ans[N];<br>
+//    int j, k;<br>
+//    for(int i = 0;i &lt; G.vernum;i++){<br>
+//        memset(ans,0,sizeof(ans));<br>
+//        k = i;<br>
+//        if(Closedge[k].pree == -1 &amp;&amp; i != v){<br>
+//            cout &lt;&lt; ch &lt;&lt; &quot;----&gt;&quot; &lt;&lt; G.data[i] &lt;&lt; &quot;:&quot;;<br>
+//            cout &lt;&lt; &quot;There is no way &quot; &lt;&lt; Closedge[i].lowcost &lt;&lt; endl;<br>
+//        }<br>
+//        else if(Closedge[k].pree == -1 &amp;&amp; i == v){<br>
+//            cout &lt;&lt; ch &lt;&lt; &quot;----&gt;&quot; &lt;&lt; G.data[i] &lt;&lt; &quot;:&quot;;<br>
+//            cout &lt;&lt; &quot;This is origin &quot; &lt;&lt; endl;<br>
+//        }<br>
+//        else{<br>
+//            j = 0;<br>
+//            ans[j] = G.data[k];<br>
+//            while(Closedge[k].pree != v){<br>
+//                ans[++j] = G.data[Closedge[k].pree];<br>
+//                k = Closedge[k].pree;<br>
+//            }<br>
+//            ans[++j] = G.data[v];<br>
+//            cout &lt;&lt; ch &lt;&lt; &quot;----&gt;&quot; &lt;&lt; G.data[i] &lt;&lt; &quot;:&quot;;<br>
+//            for(int q = j;q &gt;= 0;q--){<br>
+//                cout &lt;&lt; &quot; &quot; &lt;&lt; ans[q];<br>
+//            }<br>
+//            cout &lt;&lt; &quot; &quot; &lt;&lt; Closedge[i].lowcost &lt;&lt; endl;<br>
+//        }<br>
+//    }<br>
+//}</p>
 
         </div>
 
         
-          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://www.mksdu.top//tag/roLism78f">
-            <span class="flex-auto">感触</span>
+          <a class="animated fadeInUp p-2 items-center text-sm text-gray-700 border hover:bg-gray-300 leading-none rounded-full flex lg:inline-flex m-4 " href="https://www.mksdu.top//tag/_sJHp_z1F">
+            <span class="flex-auto">数据结构</span>
           </a>
         
 
 
         <div class="flex justify-between py-8">
           
-            <div class="prev-post">
-              <a href="https://www.mksdu.top//post/shu-de-liang-chong-biao-shi-fang-fa">
-                <h3 class="post-title">
-                  <i class="remixicon-arrow-left-line"></i>
-                  树的两种表示方法
-                </h3>
-              </a>
-            </div>
-          
 
           
             <div class="next-post">
-              <a href="https://www.mksdu.top//post/hello-world">
+              <a href="https://www.mksdu.top//post/shu-de-liang-chong-biao-shi-fang-fa">
                 <h3 class="post-title">
-                  Hello World!
+                  树的两种表示方法
                   <i class="remixicon-arrow-right-line"></i>
                 </h3>
               </a>
